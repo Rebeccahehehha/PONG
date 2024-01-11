@@ -1,5 +1,7 @@
 import Ball from "./Ball.js"
 import Paddle from "./Paddle.js"
+import isLose from "./util/isLose.js"
+import handleLose from "./util/handleLose.js"
 
 const ball = new Ball(document.getElementById("ball"))
 const playerPaddle = new Paddle(document.getElementById("player-paddle"))
@@ -19,28 +21,15 @@ function update(time) {
 
     document.documentElement.style.setProperty("--hue", hue + delta * 0.01)
 
-    if (isLose()) handleLose()
+    if (isLose(ball)) handleLose(ball,playerScoreElem,computerScoreElem,computerPaddle)
   }
 
   lastTime = time
   window.requestAnimationFrame(update)
 }
 
-function isLose() {
-  const rect = ball.rect()
-  return rect.right >= window.innerWidth || rect.left <= 0
-}
 
-function handleLose() {
-  const rect = ball.rect()
-  if (rect.right >= window.innerWidth) {
-    playerScoreElem.textContent = parseInt(playerScoreElem.textContent) + 1
-  } else {
-    computerScoreElem.textContent = parseInt(computerScoreElem.textContent) + 1
-  }
-  ball.reset()
-  computerPaddle.reset()
-}
+
 
 document.addEventListener("mousemove", e => {
   playerPaddle.position = (e.y / window.innerHeight) * 100
